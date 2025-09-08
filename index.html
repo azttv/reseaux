@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <title>az_ttv</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Ajout de la police Comfortaa via Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Comfortaa:400,700&display=swap" rel="stylesheet">
   <style>
     html, body {
       height: 100%;
@@ -11,6 +13,7 @@
       padding: 0;
       overflow: hidden;
       background: linear-gradient(120deg, #232526, #414345);
+      font-family: 'Comfortaa', 'Segoe UI', Arial, sans-serif; /* Ici Comfortaa est prioritaire */
     }
 
     body {
@@ -19,7 +22,7 @@
       justify-content: center;
       height: 100vh;
       position: relative;
-      font-family: 'Segoe UI', Arial, sans-serif;
+      font-family: 'Comfortaa', 'Segoe UI', Arial, sans-serif;
       flex-direction: column;
     }
 
@@ -51,6 +54,7 @@
       animation: shine 2s linear infinite;
       filter: drop-shadow(0 2px 16px #a251ff99);
       transition: opacity 0.5s;
+      font-family: 'Comfortaa', 'Segoe UI', Arial, sans-serif;
     }
 
     @keyframes shine {
@@ -67,6 +71,7 @@
       position: relative;
       z-index: 2;
       margin-bottom: 3vw;
+      font-family: 'Comfortaa', 'Segoe UI', Arial, sans-serif;
     }
     .fade-word {
       opacity: 0;
@@ -75,6 +80,7 @@
       letter-spacing: 0.09em;
       animation: fadeIn 1s forwards;
       transition: opacity 0.5s;
+      font-family: 'Comfortaa', 'Segoe UI', Arial, sans-serif;
     }
     .fade-word:nth-child(1) { animation-delay: 0.1s; }
     .fade-word:nth-child(2) { animation-delay: 0.2s; }
@@ -91,6 +97,7 @@
       transition: background 0.2s, box-shadow 0.2s;
       box-shadow: 0 2px 10px #a251ff99;
       text-decoration: none;
+      font-family: 'Comfortaa', 'Segoe UI', Arial, sans-serif;
     }
     .icon-link:hover {
       background: rgba(255,255,255,0.18);
@@ -123,6 +130,7 @@
       z-index: 2;
       position: relative;
       animation: fadeInZone 0.8s;
+      font-family: 'Comfortaa', 'Segoe UI', Arial, sans-serif;
     }
     .projects-title {
       font-size: 1.8em;
@@ -132,6 +140,7 @@
       letter-spacing: 0.06em;
       text-align: center;
       text-shadow: 0 2px 12px #7439b877;
+      font-family: 'Comfortaa', 'Segoe UI', Arial, sans-serif;
     }
 
     /* Organisation en cercle horizontal */
@@ -144,6 +153,7 @@
       margin-top: 2vw;
       position: relative;
       height: 10vw; /* hauteur du cercle */
+      font-family: 'Comfortaa', 'Segoe UI', Arial, sans-serif;
     }
     .project-item {
       display: flex;
@@ -164,6 +174,7 @@
       top: 50%;
       transform: translate(-50%, -50%);
       /* Les transformations seront sur chaque item individuellement */
+      font-family: 'Comfortaa', 'Segoe UI', Arial, sans-serif;
     }
     .project-item:hover {
       background: rgba(255,255,255,0.18);
@@ -219,9 +230,9 @@
   <div class="projects-zone" id="projects-zone">
     <div class="projects-title">Mes Projets</div>
     <div class="projects-list">
-      <a class="project-item" href="https://google.com" target="_blank"> <img src="https://i.imgur.com/uSGvWJT.gif" height="150px" width="150px"></a>
-      <a class="project-item" href="https://google.com" target="_blank">À venir...</a>
-      <a class="project-item" href="https://google.com" target="_blank">À venir...</a>
+      <a class="project-item" href="https://discord.gg/HefFTCS4cp" target="_blank"> <img src="https://i.imgur.com/uSGvWJT.gif" height="150px" width="150px"></a>
+      <a style="color:#414345" class="project-item" href="https://google.com" target="_blank">À venir...</a>
+      <a style="color:#414345" class="project-item" href="https://google.com" target="_blank">À venir...</a>
     </div>
   </div>
   <script>
