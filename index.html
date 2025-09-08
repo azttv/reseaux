@@ -20,6 +20,7 @@
       height: 100vh;
       position: relative;
       font-family: 'Segoe UI', Arial, sans-serif;
+      flex-direction: column;
     }
 
     .parallax-bg {
@@ -65,6 +66,7 @@
       height: 1em;
       position: relative;
       z-index: 2;
+      margin-bottom: 3vw;
     }
     .fade-word {
       opacity: 0;
@@ -98,11 +100,100 @@
       width: 1.4em;
       height: 1.4em;
       object-fit: contain;
-      /* Example: you can style per network type using .instagram, .tiktok, .youtube */
     }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(15px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+
+    /* PROJETS ZONE */
+    .projects-zone {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      margin-top: 2vw;
+      padding: 2vw 3vw;
+      background: rgba(36, 17, 42, 0.7);
+      border-radius: 1vw;
+      box-shadow: 0 2px 20px #a251ff55;
+      min-width: 340px;
+      max-width: 94vw;
+      z-index: 2;
+      position: relative;
+      animation: fadeInZone 0.8s;
+    }
+    .projects-title {
+      font-size: 1.8em;
+      font-weight: 600;
+      color: #c689ff;
+      margin-bottom: 1.2vw;
+      letter-spacing: 0.06em;
+      text-align: center;
+      text-shadow: 0 2px 12px #7439b877;
+    }
+
+    /* Organisation en cercle horizontal */
+    .projects-list {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 5vw;
+      width: 100%;
+      margin-top: 2vw;
+      position: relative;
+      height: 10vw; /* hauteur du cercle */
+    }
+    .project-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.07);
+      border-radius: 50%;
+      width: 7vw;
+      height: 7vw;
+      font-size: 1.15em;
+      color: #fff;
+      text-decoration: none;
+      transition: background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 1px 8px #a251ff22;
+      cursor: pointer;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      /* Les transformations seront sur chaque item individuellement */
+    }
+    .project-item:hover {
+      background: rgba(255,255,255,0.18);
+      color: #c689ff;
+      box-shadow: 0 3px 16px #a251ff55;
+      text-decoration: underline;
+    }
+    /* Placement circulaire via nth-child */
+    .project-item:nth-child(1) {
+      transform:
+        translate(-5vw)
+        rotate(-30deg)
+        translateY(-8vw)
+        rotate(30deg);
+    }
+    .project-item:nth-child(2) {
+      transform:
+        translate(-50%, -50%)
+        translateY(2.5vw);
+    }
+    .project-item:nth-child(3) {
+      transform:
+        translate(-2vw)
+        rotate(30deg)
+        translateY(-8vw)
+        rotate(-30deg);
+    }
+
+    @keyframes fadeInZone {
+      from { opacity: 0; transform: translateY(20px);}
       to { opacity: 1; transform: translateY(0);}
     }
   </style>
@@ -113,7 +204,7 @@
   <div class="fade-words" style="display:none;">
     <!-- Instagram -->
     <a class="fade-word icon-link instagram" href="https://www.instagram.com/amd_ewen" target="_blank" title="Instagram">
-      <img src="instagram.png" height="512px" width="512px" alt="Instagram"/>
+      <img src="instagram.png" alt="Instagram"/>
     </a>
     <!-- TikTok -->
     <a class="fade-word icon-link tiktok" href="https://www.tiktok.com/@az_ttv" target="_blank" title="TikTok">
@@ -124,6 +215,15 @@
       <img src="youtube.png" alt="YouTube"/>
     </a>
   </div>
+  <!-- ZONE PROJETS -->
+  <div class="projects-zone" id="projects-zone">
+    <div class="projects-title">Mes Projets</div>
+    <div class="projects-list">
+      <a class="project-item" href="https://google.com" target="_blank"> <img src="https://i.imgur.com/uSGvWJT.gif" height="150px" width="150px"></a>
+      <a class="project-item" href="https://google.com" target="_blank">À venir...</a>
+      <a class="project-item" href="https://google.com" target="_blank">À venir...</a>
+    </div>
+  </div>
   <script>
     // Parallax effect for background
     document.addEventListener('mousemove', function(e) {
@@ -133,9 +233,10 @@
         `${50 + x * 10}% ${50 + y * 10}%`;
     });
 
-    // Click title to fade out and show words
+    // Click title to fade out and show words + zone projets
     const title = document.getElementById('title');
     const fadeWords = document.querySelector('.fade-words');
+    const projectsZone = document.getElementById('projects-zone');
 
     title.addEventListener('click', function() {
       title.style.opacity = 0;
@@ -150,6 +251,13 @@
           w.style.animation = `fadeIn 1s forwards`;
           w.style.animationDelay = `${0.1 + 0.2*i}s`;
         });
+        // Affiche la zone projets
+        projectsZone.style.display = 'flex';
+        projectsZone.style.opacity = 0;
+        projectsZone.style.animation = 'none';
+        void projectsZone.offsetWidth;
+        projectsZone.style.animation = 'fadeInZone 0.8s';
+        projectsZone.style.opacity = 1;
       }, 500);
     });
   </script>
