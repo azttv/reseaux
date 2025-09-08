@@ -43,7 +43,7 @@
       font-weight: 700;
       letter-spacing: 0.07em;
       user-select: none;
-      background: linear-gradient(90deg, #fff 0%, #7439b8 40%, #60007e 60%, #c689ff 100%);
+      background: linear-gradient(90deg, #c689ff 0%, #7439b8 40%, #60007e 60%, #c689ff 100%);
       background-size: 200% auto;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -74,9 +74,9 @@
       animation: fadeIn 1s forwards;
       transition: opacity 0.5s;
     }
-    .fade-word:nth-child(1) { animation-delay: 0.2s; }
-    .fade-word:nth-child(2) { animation-delay: 0.6s; }
-    .fade-word:nth-child(3) { animation-delay: 1.0s; }
+    .fade-word:nth-child(1) { animation-delay: 0.1s; }
+    .fade-word:nth-child(2) { animation-delay: 0.2s; }
+    .fade-word:nth-child(3) { animation-delay: 0.3s; }
 
     .icon-link {
       display: flex;
@@ -113,15 +113,15 @@
   <div class="fade-words" style="display:none;">
     <!-- Instagram -->
     <a class="fade-word icon-link instagram" href="https://www.instagram.com/amd_ewen" target="_blank" title="Instagram">
-      <img src="instagram.png" alt="Instagram"/>
+      <img src="placeholder_instagram.png" alt="Instagram"/>
     </a>
     <!-- TikTok -->
     <a class="fade-word icon-link tiktok" href="https://www.tiktok.com/@az_ttv" target="_blank" title="TikTok">
-      <img src="tiktok.png" alt="TikTok"/>
+      <img src="placeholder_tiktok.png" alt="TikTok"/>
     </a>
     <!-- Youtube -->
     <a class="fade-word icon-link youtube" href="https://www.youtube.com/@az11ttv" target="_blank" title="YouTube">
-      <img src="youtube.png" alt="YouTube"/>
+      <img src="placeholder_youtube.png" alt="YouTube"/>
     </a>
   </div>
   <script>
@@ -148,7 +148,7 @@
           w.style.animation = 'none';
           void w.offsetWidth; // trigger reflow
           w.style.animation = `fadeIn 1s forwards`;
-          w.style.animationDelay = `${0.2 + 1*i}s`;
+          w.style.animationDelay = `${0.1 + 0.2*i}s`;
         });
       }, 500);
     });
