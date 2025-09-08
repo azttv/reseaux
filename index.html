@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>az_ttv</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: linear-gradient(120deg, #232526, #414345);
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      position: relative;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+
+    .parallax-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 50%, #222 0%, #333 100%);
+      transition: background-position 0.2s;
+    }
+
+    h1#title {
+      position: relative;
+      z-index: 2;
+      font-size: 7vw;
+      color: #fff;
+      text-align: center;
+      cursor: pointer;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      user-select: none;
+      background: linear-gradient(90deg, #fff 0%, #ffe259 40%, #ffa751 60%, #fff 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shine 2s linear infinite;
+      filter: drop-shadow(0 2px 16px #ffa75199);
+      transition: opacity 0.5s;
+    }
+
+    @keyframes shine {
+      0% { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .fade-words {
+      display: flex;
+      gap: 3vw;
+      justify-content: center;
+      align-items: center;
+      height: 1em;
+      position: relative;
+      z-index: 2;
+    }
+    .fade-word {
+      opacity: 0;
+      font-size: 3vw;
+      font-weight: bold;
+      letter-spacing: 0.09em;
+      animation: fadeIn 1s forwards;
+      transition: opacity 0.5s;
+    }
+    .fade-word:nth-child(1) { animation-delay: 0.2s; }
+    .fade-word:nth-child(2) { animation-delay: 1.2s; }
+    .fade-word:nth-child(3) { animation-delay: 2.2s; }
+
+    .icon-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2em;
+      height: 2em;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.07);
+      transition: background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 10px #ffa75144;
+      text-decoration: none;
+    }
+    .icon-link:hover {
+      background: rgba(255,255,255,0.18);
+      box-shadow: 0 4px 18px #ffa75166;
+    }
+    .icon-link img {
+      width: 1.4em;
+      height: 1.4em;
+      object-fit: contain;
+      /* Example: you can style per network type using .instagram, .tiktok, .youtube */
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+  </style>
+</head>
+<body>
+  <div class="parallax-bg"></div>
+  <h1 id="title">az_ttv</h1>
+  <div class="fade-words" style="display:none;">
+    <!-- Instagram -->
+    <a class="fade-word icon-link instagram" href="https://www.instagram.com/amd_ewen" target="_blank" title="Instagram">
+      <img src="instagram.png" alt="Instagram"/>
+    </a>
+    <!-- TikTok -->
+    <a class="fade-word icon-link tiktok" href="https://www.tiktok.com/@az_ttv" target="_blank" title="TikTok">
+      <img src="tiktok.png" alt="TikTok"/>
+    </a>
+    <!-- Youtube -->
+    <a class="fade-word icon-link youtube" href="https://www.youtube.com/@az11ttv" target="_blank" title="YouTube">
+      <img src="youtube.png" alt="YouTube"/>
+    </a>
+  </div>
+  <script>
+    // Parallax effect for background
+    document.addEventListener('mousemove', function(e) {
+      const x = e.clientX / window.innerWidth;
+      const y = e.clientY / window.innerHeight;
+      document.querySelector('.parallax-bg').style.backgroundPosition =
+        `${50 + x * 10}% ${50 + y * 10}%`;
+    });
+
+    // Click title to fade out and show words
+    const title = document.getElementById('title');
+    const fadeWords = document.querySelector('.fade-words');
+
+    title.addEventListener('click', function() {
+      title.style.opacity = 0;
+      setTimeout(() => {
+        title.style.display = 'none';
+        fadeWords.style.display = 'flex';
+        // Restart animation if clicked again
+        fadeWords.querySelectorAll('.fade-word').forEach((w, i) => {
+          w.style.opacity = '0';
+          w.style.animation = 'none';
+          void w.offsetWidth; // trigger reflow
+          w.style.animation = `fadeIn 1s forwards`;
+          w.style.animationDelay = `${0.2 + 1*i}s`;
+        });
+      }, 500);
+    });
+  </script>
+</body>
+</html>
