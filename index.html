@@ -495,8 +495,10 @@
     function updateIcon(volume) {
       if (volume === 0) {
         icon.textContent = "🔇";
-      } else if (volume < 0.5) {
+      } else if (volume < 0.333) {
         icon.textContent = "🔈";
+      } else if (volume < 0.666) {
+        icon.textContent = "🔉";
       } else {
         icon.textContent = "🔊";
       }
