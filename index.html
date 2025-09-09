@@ -13,8 +13,8 @@
       margin: 0;
       padding: 0;
       overflow: hidden;
-      background: linear-gradient(120deg, #232526, #414345);
-      font-family: 'Comfortaa', 'Segoe UI', Arial, sans-serif; /* Ici Comfortaa est prioritaire */
+      background: #000;
+      font-family: 'Comfortaa', 'Segoe UI', Arial, sans-serif;
     }
 
     body {
@@ -27,40 +27,90 @@
       flex-direction: column;
     }
 
-    .parallax-bg {
+    .dust-canvas {
       position: fixed;
       top: 0; left: 0;
       width: 100vw;
       height: 100vh;
       z-index: 0;
       pointer-events: none;
-      background: radial-gradient(circle at 50% 50%, #222 0%, #333 100%);
-      transition: background-position 0.2s;
+      background: #000;
+      opacity: 0;
+      animation: fadeInBg 1.2s cubic-bezier(.36,-0.01,.57,.99) forwards;
+    }
+
+    @keyframes fadeInBg {
+      from { opacity: 0;}
+      60% { opacity: 1; }
+      to { opacity: 1;}
     }
 
     h1#title {
       position: relative;
       z-index: 2;
-      font-size: 7vw;
+      font-size: 5vw;
       color: #fff;
       text-align: center;
       cursor: pointer;
-      font-weight: 700;
+      font-weight: 100;
       letter-spacing: 0.07em;
       user-select: none;
       background: linear-gradient(90deg, #c689ff 0%, #7439b8 40%, #60007e 60%, #c689ff 100%);
       background-size: 200% auto;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: shine 2s linear infinite;
+      animation: shine 2s linear infinite, fadeInTitle 1.2s cubic-bezier(.36,-0.01,.57,.99) forwards;
       filter: drop-shadow(0 2px 16px #a251ff99);
       transition: opacity 0.5s;
       font-family: 'Minecraftia', 'Comfortaa', 'Segoe UI', Arial, sans-serif;
+      will-change: transform;
+      opacity: 0;
+    }
+
+    @keyframes fadeInTitle {
+      from { opacity: 0;}
+      60% { opacity: 1; }
+      to { opacity: 1;}
     }
 
     @keyframes shine {
       0% { background-position: 0% center; }
       100% { background-position: 200% center; }
+    }
+
+    /* Dissolve effect for title */
+    .dissolve {
+      animation: dissolveText 0.8s cubic-bezier(.66,.01,.57,.99) forwards;
+    }
+    @keyframes dissolveText {
+      0% {
+        opacity: 1;
+        filter: blur(0px);
+        letter-spacing: 0.07em;
+      }
+      60% {
+        opacity: 0.3;
+        filter: blur(3px);
+        letter-spacing: 0.15em;
+      }
+      100% {
+        opacity: 0;
+        filter: blur(8px);
+        letter-spacing: 0.25em;
+      }
+    }
+
+    .fade-words,
+    .projects-zone {
+      opacity: 0;
+      transition: opacity 0.8s cubic-bezier(.36,-0.01,.57,.99);
+      /* Pour le fade-in */
+      will-change: opacity;
+    }
+    .fade-words.visible,
+    .projects-zone.visible {
+      opacity: 1;
+      transition: opacity 1s cubic-bezier(.36,-0.01,.57,.99);
     }
 
     .fade-words {
@@ -144,7 +194,6 @@
       font-family: 'Comfortaa', 'Segoe UI', Arial, sans-serif;
     }
 
-    /* Organisation en cercle horizontal */
     .projects-list {
       display: flex;
       justify-content: center;
@@ -153,7 +202,7 @@
       width: 100%;
       margin-top: 2vw;
       position: relative;
-      height: 10vw; /* hauteur du cercle */
+      height: 10vw;
       font-family: 'Comfortaa', 'Segoe UI', Arial, sans-serif;
     }
     .project-item {
@@ -174,7 +223,6 @@
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
-      /* Les transformations seront sur chaque item individuellement */
       font-family: 'Comfortaa', 'Segoe UI', Arial, sans-serif;
     }
     .project-item:hover {
@@ -183,7 +231,6 @@
       box-shadow: 0 3px 16px #a251ff55;
       text-decoration: underline;
     }
-    /* Placement circulaire via nth-child */
     .project-item:nth-child(1) {
       transform:
         translate(-5vw)
@@ -211,8 +258,8 @@
   </style>
 </head>
 <body>
-  <div class="parallax-bg"></div>
-  <h1 id="title">az_ttv</h1>
+  <canvas class="dust-canvas"></canvas>
+  <h1 id="title" class="parallax-title">az_ttv</h1>
   <div class="fade-words" style="display:none;">
     <!-- Instagram -->
     <a class="fade-word icon-link instagram" href="https://www.instagram.com/amd_ewen" target="_blank" title="Instagram">
@@ -237,25 +284,75 @@
     </div>
   </div>
   <script>
-    // Parallax effect for background
-    document.addEventListener('mousemove', function(e) {
-      const x = e.clientX / window.innerWidth;
-      const y = e.clientY / window.innerHeight;
-      document.querySelector('.parallax-bg').style.backgroundPosition =
-        `${50 + x * 10}% ${50 + y * 10}%`;
-    });
+    // Dust particles animation
+    const canvas = document.querySelector('.dust-canvas');
+    const ctx = canvas.getContext('2d');
+    let w = window.innerWidth, h = window.innerHeight;
+    canvas.width = w;
+    canvas.height = h;
 
-    // Click title to fade out and show words + zone projets
+    function resizeCanvas() {
+      w = window.innerWidth;
+      h = window.innerHeight;
+      canvas.width = w;
+      canvas.height = h;
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    // Particle settings
+    const NUM_PARTICLES = Math.floor((w * h) / 4500); // density
+    const particles = [];
+    for (let i = 0; i < NUM_PARTICLES; i++) {
+      particles.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 1.8 + 0.7,
+        a: Math.random() * 2 * Math.PI,
+        speed: Math.random() * 0.12 + 0.05,
+        opacity: Math.random() * 0.5 + 0.2
+      });
+    }
+
+    function animateDust() {
+      ctx.clearRect(0, 0, w, h);
+      for (let p of particles) {
+        // Move in a slow swirling pattern
+        p.x += Math.cos(p.a) * p.speed;
+        p.y += Math.sin(p.a) * p.speed;
+        p.a += (Math.random() - 0.5) * 0.01;
+
+        // Wrap around edges
+        if (p.x < 0) p.x = w;
+        if (p.x > w) p.x = 0;
+        if (p.y < 0) p.y = h;
+        if (p.y > h) p.y = 0;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, 2 * Math.PI);
+        ctx.fillStyle = `rgba(255,255,255,${p.opacity})`;
+        ctx.shadowColor = '#fff';
+        ctx.shadowBlur = 8;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+      requestAnimationFrame(animateDust);
+    }
+    animateDust();
+
+    // Dissolve and fade-in effect
     const title = document.getElementById('title');
     const fadeWords = document.querySelector('.fade-words');
     const projectsZone = document.getElementById('projects-zone');
 
     title.addEventListener('click', function() {
-      title.style.opacity = 0;
+      // Dissolve effect on title
+      title.classList.add('dissolve');
       setTimeout(() => {
         title.style.display = 'none';
+
+        // Fade-in for fade-words and projects-zone
         fadeWords.style.display = 'flex';
-        // Restart animation if clicked again
+        fadeWords.classList.add('visible');
         fadeWords.querySelectorAll('.fade-word').forEach((w, i) => {
           w.style.opacity = '0';
           w.style.animation = 'none';
@@ -263,14 +360,13 @@
           w.style.animation = `fadeIn 1s forwards`;
           w.style.animationDelay = `${0.1 + 0.2*i}s`;
         });
-        // Affiche la zone projets
+
         projectsZone.style.display = 'flex';
-        projectsZone.style.opacity = 0;
-        projectsZone.style.animation = 'none';
-        void projectsZone.offsetWidth;
-        projectsZone.style.animation = 'fadeInZone 0.8s';
-        projectsZone.style.opacity = 1;
-      }, 500);
+        setTimeout(() => {
+          projectsZone.classList.add('visible');
+        }, 100); // slight delay for smoothness
+
+      }, 800); // match dissolveText duration
     });
   </script>
 </body>
