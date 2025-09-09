@@ -1,3 +1,7 @@
+Parfait 👍 je t’ai tout intégré directement dans ton fichier HTML, avec les **media queries** pour mobile.
+Tu peux copier-coller tel quel :
+
+```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -27,6 +31,60 @@
       position: relative;
       font-family: 'Comfortaa', 'Segoe UI', Arial, sans-serif;
       flex-direction: column;
+    }
+
+    .audio-control {
+      position: fixed;
+      bottom: 30px;
+      left: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 3;
+    }
+
+    #audio-icon {
+      font-size: 28px;
+      color: #fff;
+      text-shadow: 0 0 8px #a251ffcc;
+      user-select: none;
+    }
+
+    #audio-slider {
+      width: 150px;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 8px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.2);
+      outline: none;
+      box-shadow: 0 2px 10px #a251ff99;
+      cursor: pointer;
+    }
+
+    #audio-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #c689ff;
+      cursor: pointer;
+      box-shadow: 0 0 6px #a251ffcc;
+      transition: background 0.2s;
+    }
+
+    #audio-slider::-webkit-slider-thumb:hover {
+      background: #7439b8;
+    }
+
+    #audio-slider::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #c689ff;
+      cursor: pointer;
+      box-shadow: 0 0 6px #a251ffcc;
     }
 
     .dust-canvas {
@@ -106,7 +164,6 @@
     .projects-zone {
       opacity: 0;
       transition: opacity 0.8s cubic-bezier(.36,-0.01,.57,.99);
-      /* Pour le fade-in */
       will-change: opacity;
     }
     .fade-words.visible,
@@ -257,26 +314,80 @@
       from { opacity: 0; transform: translateY(20px);}
       to { opacity: 1; transform: translateY(0);}
     }
+
+    /* 📱 Adaptation mobile */
+    @media (max-width: 768px) {
+      h1#title {
+        font-size: 10vw;
+      }
+
+      .fade-words {
+        flex-direction: column;
+        gap: 6vw;
+        margin-bottom: 6vw;
+      }
+      .fade-word {
+        font-size: 6vw;
+      }
+      .icon-link {
+        width: 3.5em;
+        height: 3.5em;
+      }
+      .icon-link img {
+        width: 2em;
+        height: 2em;
+      }
+
+      .projects-zone {
+        padding: 6vw 4vw;
+        min-width: auto;
+        width: 90%;
+      }
+      .projects-title {
+        font-size: 1.4em;
+      }
+
+      .projects-list {
+        flex-direction: column;
+        gap: 6vw;
+        height: auto;
+      }
+      .project-item {
+        position: static;
+        width: 18vw;
+        height: 18vw;
+        font-size: 1em;
+        transform: none !important;
+      }
+
+      .audio-control {
+        bottom: 15px;
+        left: 10px;
+      }
+      #audio-icon {
+        font-size: 32px;
+      }
+      #audio-slider {
+        width: 120px;
+        height: 12px;
+      }
+    }
   </style>
 </head>
 <body>
   <canvas class="dust-canvas"></canvas>
   <h1 id="title" class="parallax-title">az_ttv</h1>
   <div class="fade-words" style="display:none;">
-    <!-- Instagram -->
     <a class="fade-word icon-link instagram" href="https://www.instagram.com/amd_ewen" target="_blank" title="Instagram">
       <img src="instagram.png" alt="Instagram"/>
     </a>
-    <!-- TikTok -->
     <a class="fade-word icon-link tiktok" href="https://www.tiktok.com/@az_ttv" target="_blank" title="TikTok">
       <img src="tiktok.png" alt="TikTok"/>
     </a>
-    <!-- Youtube -->
     <a class="fade-word icon-link youtube" href="https://www.youtube.com/@az11ttv" target="_blank" title="YouTube">
       <img src="youtube.png" alt="YouTube"/>
     </a>
   </div>
-  <!-- ZONE PROJETS -->
   <div class="projects-zone" id="projects-zone">
     <div class="projects-title">Mes Projets</div>
     <div class="projects-list">
@@ -285,8 +396,12 @@
       <a style="color:#414345" class="project-item" href="https://google.com" target="_blank">À venir...</a>
     </div>
   </div>
+  <div class="audio-control">
+    <span id="audio-icon">🔈</span>
+    <input type="range" id="audio-slider" min="0" max="100" value="20" step="1">
+  </div>
+
   <script>
-    // Dust particles animation
     const canvas = document.querySelector('.dust-canvas');
     const ctx = canvas.getContext('2d');
     let w = window.innerWidth, h = window.innerHeight;
@@ -301,8 +416,7 @@
     }
     window.addEventListener('resize', resizeCanvas);
 
-    // Particle settings
-    const NUM_PARTICLES = Math.floor((w * h) / 4500); // density
+    const NUM_PARTICLES = Math.floor((w * h) / 4500);
     const particles = [];
     for (let i = 0; i < NUM_PARTICLES; i++) {
       particles.push({
@@ -318,12 +432,10 @@
     function animateDust() {
       ctx.clearRect(0, 0, w, h);
       for (let p of particles) {
-        // Move in a slow swirling pattern
         p.x += Math.cos(p.a) * p.speed;
         p.y += Math.sin(p.a) * p.speed;
         p.a += (Math.random() - 0.5) * 0.01;
 
-        // Wrap around edges
         if (p.x < 0) p.x = w;
         if (p.x > w) p.x = 0;
         if (p.y < 0) p.y = h;
@@ -341,24 +453,21 @@
     }
     animateDust();
 
-    // Dissolve and fade-in effect
     const title = document.getElementById('title');
     const fadeWords = document.querySelector('.fade-words');
     const projectsZone = document.getElementById('projects-zone');
 
     title.addEventListener('click', function() {
-      // Dissolve effect on title
       title.classList.add('dissolve');
       setTimeout(() => {
         title.style.display = 'none';
 
-        // Fade-in for fade-words and projects-zone
         fadeWords.style.display = 'flex';
         fadeWords.classList.add('visible');
         fadeWords.querySelectorAll('.fade-word').forEach((w, i) => {
           w.style.opacity = '0';
           w.style.animation = 'none';
-          void w.offsetWidth; // trigger reflow
+          void w.offsetWidth;
           w.style.animation = `fadeIn 1s forwards`;
           w.style.animationDelay = `${0.1 + 0.2*i}s`;
         });
@@ -366,24 +475,52 @@
         projectsZone.style.display = 'flex';
         setTimeout(() => {
           projectsZone.classList.add('visible');
-        }, 100); // slight delay for smoothness
+        }, 100);
 
-      }, 800); // match dissolveText duration
+      }, 800);
     });
 
-    // Lance la musique immédiatement à l'ouverture du site, même sans interaction
     window.addEventListener('DOMContentLoaded', function() {
       var audio = document.getElementById('fond-audio');
       if (audio) {
         audio.volume = 0.2;
-        // Tentative immédiate
         audio.play().catch(()=>{
-          // Si l'autoplay est bloqué, tente à nouveau après une interaction utilisateur
           document.addEventListener('click', () => {
             audio.play().catch(()=>{});
           }, { once: true });
         });
       }
+    });
+
+    const audio = document.getElementById('fond-audio');
+    const slider = document.getElementById('audio-slider');
+    const icon = document.getElementById('audio-icon');
+
+    function updateIcon(volume) {
+      if (volume === 0) {
+        icon.textContent = "🔇";
+      } else if (volume < 0.5) {
+        icon.textContent = "🔈";
+      } else {
+        icon.textContent = "🔊";
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', function() {
+      if (audio) {
+        audio.volume = slider.value / 100;
+        updateIcon(audio.volume);
+        audio.play().catch(()=>{
+          document.addEventListener('click', () => {
+            audio.play().catch(()=>{});
+          }, { once: true });
+        });
+      }
+    });
+
+    slider.addEventListener('input', () => {
+      audio.volume = slider.value / 100;
+      updateIcon(audio.volume);
     });
   </script>
 </body>
