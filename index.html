@@ -134,26 +134,13 @@
       100% { background-position: 200% center; }
     }
 
-    /* Dissolve effect for title */
     .dissolve {
       animation: dissolveText 0.8s cubic-bezier(.66,.01,.57,.99) forwards;
     }
     @keyframes dissolveText {
-      0% {
-        opacity: 1;
-        filter: blur(0px);
-        letter-spacing: 0.07em;
-      }
-      60% {
-        opacity: 0.3;
-        filter: blur(3px);
-        letter-spacing: 0.15em;
-      }
-      100% {
-        opacity: 0;
-        filter: blur(8px);
-        letter-spacing: 0.25em;
-      }
+      0% { opacity: 1; filter: blur(0px); letter-spacing: 0.07em; }
+      60% { opacity: 0.3; filter: blur(3px); letter-spacing: 0.15em; }
+      100% { opacity: 0; filter: blur(8px); letter-spacing: 0.25em; }
     }
 
     .fade-words,
@@ -177,7 +164,6 @@
       position: relative;
       z-index: 2;
       margin-bottom: 3vw;
-      font-family: 'Comfortaa', 'Segoe UI', Arial, sans-serif;
     }
     .fade-word {
       opacity: 0;
@@ -186,7 +172,6 @@
       letter-spacing: 0.09em;
       animation: fadeIn 1s forwards;
       transition: opacity 0.5s;
-      font-family: 'Comfortaa', 'Segoe UI', Arial, sans-serif;
     }
     .fade-word:nth-child(1) { animation-delay: 0.1s; }
     .fade-word:nth-child(2) { animation-delay: 0.2s; }
@@ -203,7 +188,6 @@
       transition: background 0.2s, box-shadow 0.2s;
       box-shadow: 0 2px 10px #a251ff99;
       text-decoration: none;
-      font-family: 'Comfortaa', 'Segoe UI', Arial, sans-serif;
     }
     .icon-link:hover {
       background: rgba(255,255,255,0.18);
@@ -220,7 +204,6 @@
       to { opacity: 1; transform: translateY(0);}
     }
 
-    /* PROJETS ZONE */
     .projects-zone {
       display: none;
       flex-direction: column;
@@ -236,7 +219,6 @@
       z-index: 2;
       position: relative;
       animation: fadeInZone 0.8s;
-      font-family: 'Comfortaa', 'Segoe UI', Arial, sans-serif;
     }
     .projects-title {
       font-size: 1.8em;
@@ -246,7 +228,6 @@
       letter-spacing: 0.06em;
       text-align: center;
       text-shadow: 0 2px 12px #7439b877;
-      font-family: 'Comfortaa', 'Segoe UI', Arial, sans-serif;
     }
 
     .projects-list {
@@ -258,7 +239,6 @@
       margin-top: 2vw;
       position: relative;
       height: 10vw;
-      font-family: 'Comfortaa', 'Segoe UI', Arial, sans-serif;
     }
     .project-item {
       display: flex;
@@ -278,7 +258,6 @@
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
-      font-family: 'Comfortaa', 'Segoe UI', Arial, sans-serif;
     }
     .project-item:hover {
       background: rgba(255,255,255,0.18);
@@ -287,23 +266,13 @@
       text-decoration: underline;
     }
     .project-item:nth-child(1) {
-      transform:
-        translate(-5vw)
-        rotate(-30deg)
-        translateY(-8vw)
-        rotate(30deg);
+      transform: translate(-5vw) rotate(-30deg) translateY(-8vw) rotate(30deg);
     }
     .project-item:nth-child(2) {
-      transform:
-        translate(-50%, -50%)
-        translateY(2.5vw);
+      transform: translate(-50%, -50%) translateY(2.5vw);
     }
     .project-item:nth-child(3) {
-      transform:
-        translate(-2vw)
-        rotate(30deg)
-        translateY(-8vw)
-        rotate(-30deg);
+      transform: translate(-2vw) rotate(30deg) translateY(-8vw) rotate(-30deg);
     }
 
     @keyframes fadeInZone {
@@ -313,17 +282,27 @@
 
     /* 📱 Adaptation mobile */
     @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+        justify-content: flex-start;
+        padding-top: 8vh;
+      }
+
       h1#title {
         font-size: 10vw;
+        text-align: center;
+        margin-bottom: 8vw;
       }
 
       .fade-words {
-        flex-direction: column;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
         gap: 6vw;
-        margin-bottom: 6vw;
+        margin-bottom: 8vw;
       }
       .fade-word {
-        font-size: 6vw;
+        font-size: 7vw;
       }
       .icon-link {
         width: 3.5em;
@@ -335,30 +314,42 @@
       }
 
       .projects-zone {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         padding: 6vw 4vw;
-        min-width: auto;
         width: 90%;
+        margin: 0 auto;
       }
       .projects-title {
-        font-size: 1.4em;
+        font-size: 1.6em;
+        margin-bottom: 6vw;
+        text-align: center;
       }
 
       .projects-list {
         flex-direction: column;
         gap: 6vw;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
         height: auto;
       }
       .project-item {
         position: static;
-        width: 18vw;
-        height: 18vw;
+        width: 20vw;
+        height: 20vw;
         font-size: 1em;
         transform: none !important;
       }
 
       .audio-control {
+        position: fixed;
         bottom: 15px;
-        left: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        justify-content: center;
+        width: auto;
       }
       #audio-icon {
         font-size: 32px;
@@ -387,7 +378,9 @@
   <div class="projects-zone" id="projects-zone">
     <div class="projects-title">Mes Projets</div>
     <div class="projects-list">
-      <a class="project-item" href="https://discord.gg/HefFTCS4cp" target="_blank"> <img src="https://i.imgur.com/uSGvWJT.gif" height="150px" width="150px"></a>
+      <a class="project-item" href="https://discord.gg/HefFTCS4cp" target="_blank">
+        <img src="https://i.imgur.com/uSGvWJT.gif" height="150px" width="150px">
+      </a>
       <a style="color:#414345" class="project-item" href="https://google.com" target="_blank">À venir...</a>
       <a style="color:#414345" class="project-item" href="https://google.com" target="_blank">À venir...</a>
     </div>
