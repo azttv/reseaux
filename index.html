@@ -1,518 +1,248 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>az_ttv</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Ajout de la police Comfortaa via Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Comfortaa:400,700&display=swap" rel="stylesheet">
-  <link href="https://fonts.cdnfonts.com/css/minecraftia" rel="stylesheet">
-  <!-- Fond musical avec volume à 0.2 -->
-  <audio id="fond-audio" src="audio.wav" autoplay loop hidden></audio>
-  <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      background: #000;
-      font-family: 'Comfortaa', 'Segoe UI', Arial, sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.cdnfonts.com/css/minecraftia" rel="stylesheet"/>
+    <title>Minecraft Java Edition</title>
+    <style>
+        @font-face {
+            font-family: 'Minecraftia';
+            src: url('https://cdn.jsdelivr.net/gh/IdreesInc/Minecraft-Font/Minecraftia-Regular.woff2') format('woff2');
+        }
 
-    body {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      position: relative;
-      font-family: 'Comfortaa', 'Segoe UI', Arial, sans-serif;
-      flex-direction: column;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .audio-control {
-      position: fixed;
-      bottom: 30px;
-      left: 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      z-index: 3;
-    }
+        body {
+            font-family: 'Minecraftia', monospace;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
 
-    #audio-icon {
-      font-size: 28px;
-      color: #fff;
-      text-shadow: 0 0 8px #a251ffcc;
-      user-select: none;
-    }
+        #video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
 
-    #audio-slider {
-      width: 150px;
-      -webkit-appearance: none;
-      appearance: none;
-      height: 8px;
-      border-radius: 4px;
-      background: rgba(255, 255, 255, 0.2);
-      outline: none;
-      box-shadow: 0 2px 10px #a251ff99;
-      cursor: pointer;
-    }
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
 
-    #audio-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: #c689ff;
-      cursor: pointer;
-      box-shadow: 0 0 6px #a251ffcc;
-      transition: background 0.2s;
-    }
+        .logo-container {
+            position: absolute;
+            top: 10%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-    #audio-slider::-webkit-slider-thumb:hover {
-      background: #7439b8;
-    }
+        .logo {
+            width: 500px;
+            height: auto;
+            margin-bottom: -20px;
+        }
 
-    #audio-slider::-moz-range-thumb {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: #c689ff;
-      cursor: pointer;
-      box-shadow: 0 0 6px #a251ffcc;
-    }
+        .subtitle {
+            font-size: 16px;
+            color: #FFD700;
+            font-weight: bold;
+            text-shadow: 2px 2px 0px #000000;
+            transform: rotate(-10deg);
+            margin-left: 390px;
+            animation: bounceZoom 2s infinite;
+        }
 
-    .dust-canvas {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 0;
-      pointer-events: none;
-      background: #000;
-      opacity: 0;
-      animation: fadeInBg 1.2s cubic-bezier(.36,-0.01,.57,.99) forwards;
+@keyframes bounceZoom {
+    0%, 100% { 
+        transform: rotate(-10deg) translateY(0) scale(1); 
     }
+    25%,50% { 
+        transform: rotate(-10deg) translateY(0) scale(1.1); 
+    }
+    50%,75% { 
+        transform: rotate(-10deg) translateY(0) scale(1); 
+    }
+    75% { 
+        transform: rotate(-10deg) translateY(0) scale(1.1); 
+    }
+}
 
-    @keyframes fadeInBg {
-      from { opacity: 0;}
-      60% { opacity: 1; }
-      to { opacity: 1;}
-    }
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+            margin-top: 80px;
+        }
 
-    h1#title {
-      position: relative;
-      z-index: 2;
-      font-size: 5vw;
-      color: #fff;
-      text-align: center;
-      cursor: pointer;
-      font-weight: 100;
-      letter-spacing: 0.07em;
-      user-select: none;
-      background: linear-gradient(90deg, #c689ff 0%, #7439b8 40%, #60007e 60%, #c689ff 100%);
-      background-size: 200% auto;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: shine 2s linear infinite, fadeInTitle 1.2s cubic-bezier(.36,-0.01,.57,.99) forwards;
-      filter: drop-shadow(0 2px 16px #a251ff99);
-      transition: opacity 0.5s;
-      font-family: 'Minecraftia', 'Comfortaa', 'Segoe UI', Arial, sans-serif;
-      will-change: transform;
-      opacity: 0;
-    }
+        .button {
+            width: 400px;
+            height: 35px;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMQAAAAPCAAAAACe4j/AAAAEuElEQVRIx1WWS5Ibuw5EtddrdRRJJE4iSKrb4c2/AUuy30iK+jEBHCTwAICMCgAKiGhKVQUwKzJHQo4mQGBy7AIvk1E2AQKhFt6bUGD1gILy0DkD4dmzACkGyzCScgFgQmLZr4LpQpC56QB2wgSYE8i1fd6xd1yPHIAKwAs14Undx2LIHK0X6vdFbzTa6CNBLQE8Y5rapn7oAl3KSDKC6cLfL6sLnIVG7ffnyUgvQ6rwLjUZdIVqWz0iEXXCZ+TJsV8feUdoPHDk+a/IeAbq0ldLT59jtHweHwmKS6gFSUYCqKcVsPami1pEnqolkCMBiAS87FXTICp03geYUr8TV8un3KuyC0BfTUzihOCdwjUya1bkT9VWe+AaFOoJzHdtERXRe/eulyEDhC6pjYwr+JQuIDU9/0wQBnJEAkd+9i6IRTJrV7YWnGfwLA6ESphkBoCu88M0YH1CTTOiRUpDdwpGkkP5yL9phhwn+QVxDarAXq513y9bLKgxBGR/CjDyMl4ECd6lO82CaMLbEHGHp1R8ePDERj392ssaCOigNjJ+dXXl6OLUFfVx6dA1BFJLlHpkUHPam095C3QJLIjn6OLIOB3xe0JS85Zd+govg1/z/UhtG3RdVW98yxNp5I0Vtf/U+6y/dJ/yHtSK4q7G9ARscC3/Df/kXTwiT3d6ovjEISLJIVEvBwWeCXlALZTbpy85xqWuf3sNiBBUmYjI+BqN6aNQqDWpipSYf3W1nOV/WALoykjIiCPreSn97UigsjZdPA5s3AmCDIxaVO0Fa1fV/qkaiijPPz/bEeRyLSBDI8K8j37TO8aH7vmOqUUQ1DboYhvqd+FlFGEo+2T75MbLGnjvPeu7Pl521Ap14dcR3h7p75qv4xieqnNDoyCPLt/yKkf5gOUXl+6S3d9Syq/982fz+fhpsm28C5EhJcxsWWQke6KoPMA7tqm7kKcrn6FLhWcoqCNCxDPyQ8wEKR73nIlEX8GpARSJX7/rzeNtWPD/Dl2IwtOYMwV7osGsHYJanzeU7KqIZVCTcrT0IEbyD4d1e1dkBtW2qLhLXK7a1ogDqsjI1DR4PY7nHEqfF9tn8HUJL+eQ/lGOXdwI1++57CqgmDaReM9CZYLAk4D4ymqti4KZI9Htz9OnrcuOhCQEqJfXaxHPAFG/l/ee1GFJPXmPryYUiUGPutnRGXkagmnjHk5RNpm7xxiclm6CjJEQ4+MD4xPmuT9Ef4b3YT3B51a7d4Np76PF0cavuC+SoaH6PlilipEakoJBJETWT3k7Hf+1REPj2fIx95t5ct6u9S5v3KM2fv2Ve29ax9yC98zT2IZot61MHyYtdPF92nguZ29xfcVxSu9Nj5Gl8G3wcVoW8n1Q/f6BHFEAyy5R2aRIdYH8XfV4453vHKcnqarXPD6mdrD0rlVV5xBPF2xuJM5Oo0SdaaqGMjJva7ii6bYv74IzPMo5pGebpu72ghypwTR+WWDuhQOkFijGyAzF3GXh11lEH0hkPINZivpTqLEtVm2j1hVcn/S0//q0es5dbyxOErxKivQ+bHotvzcT3/XztPf20XqG6fJZMePT2X6ts+nlm9LoSYHMiHuJjGXniB7v2fo/5qT4nuxYg6AAAAAASUVORK5CYII=');
+            background-size: cover;
+            cursor: pointer;
+            font-family: 'Minecraftia', monospace;
+            font-size: 16px;
+            color: #FFFFFF;
+            text-shadow: 2px 2px 0px #3F3F3F;
+            transition: all 0.1s;
+            image-rendering: pixelated;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-color: #AAA #565656 #565656 #AAA;
+  	        outline: 2px solid #000;
+        }
 
-    @keyframes fadeInTitle {
-      from { opacity: 0;}
-      60% { opacity: 1; }
-      to { opacity: 1;}
-    }
+        .button:hover {
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMQAAAAPCAMAAACMV5AuAAAAVFBMVEVtd7ZteLZverdwerdwe7hxfLhyfbl0frl1f7p2gLt4grx6hLx7hb18hr5+iL+AisCBi8GCjMGEjsKGkMOHkcSIksSKk8WLlMWLlcaMlcaNlsePmMdwBHmVAAAEjElEQVRIx1WW27YbKw5F3Ul2GYTWFAJX+pyd///PfgDsTg0/mSqQ1k08AEAeDkAA7kXyDAeyu2QCWREgCGSvAAbIE/D9U2m8Ji4Drw0CEhP7EMiqBFxmDMBEkHvd5AziDsjoCKQXddUl1nuZgMZrf0PMdj1kgNY+Ay+CJPg8kj1rR3X/GS9kxaoJVFaB6QkxIX5TBX65mpAZGQH3HaoCFMj6/GxuYgDyTsyup1hfxwxVN+F08ANGANyf8jqAPaBpranJvhxV+VV08JGPVScmcL8W4EIuAFWFHMZrUkUfNC3WtIsEaFogMWJRl839MES61w1cjMUsI1fb7GKaoENMOdFNykzXPz2mlwekkXjV4ioO9b15rZWZd4AaCL9cxdSutl8buIOUkd8JTgAy01IKoFoFPhAZr65SbDHgxFIGKi5IpLaKdlafAHxaVWDt2SSZ24LQhEx6aLGyj7RtELDLiA7EiD72ehBiQJo5oPq1nOQMYGAIYoY2AwIrImaA+25P8vZRa0KgqrjnQIaACiom/1G9Sla3GUHVLl/mMl/mxeUPGT0T5seAeeAQtF9WV2F7cX4niJ4DYmBd12oh7jymyRkBuq6M81mQuExHVv313beo9VH3ojfM2zZ8AkTG8X7EeDs6OZw+mrY7E5l/gqQJmZx+YySQAi1/dqQZy0as4FL1d7nrcfd1kjWTX1ZIYESTUCnuPZE7+anrqcxlz3diUX2HowHCf15S3AvxrnhRxeMwtQACGYGKZ7wGjNl7vH73MHdP8s/vSXM0FiRqMnPowfbjRsfe6n7nZ/FGIyfgF6+A/t1XTrcWB3Q42AxkMOfMfuJotRPgqGqFMfB8KO6eN+BEpO8F2eLZ18YO0GUdmEDcXMcNey+XuOfvP5P35guSVxAzWRYUpIoSuZiJrJ/p4zPouw0pwX+6XwpIcyNWEcJ/uf5Svuyx+ncTfhmotEhIBPe/8f961F/jI5aQfSs3WFOwChnZZxPk+HQjZu/WBuDFVwobZnoLISBOdkmNLFPE9iadiImsgTcdTDKA8dj1qBT518Xcg6+6L0Yl/nqCLeH+b46InkCSETTBzEQBRoPEwS9lKVUkpEx426M3oIMHYQLhK/B6jHvgXw6if4+YM4mlJdWDpLw4MhHgjwBZgIt+ZJdAVENOEkiv6mY4yy5nFPjnQmGfGVy0IqP+cmbsWF7Se/rT+5ZBzHPdKfajHW2ouWldPJaoTDJ3GUYTNMV/IyaiPYqQuX0VPXK+ra3Mc8c5Wlkp4D/e5S5htjXU3HnPPJsBXraRM/rSpOMX99zMoVradRl9AMxJdVPIYgf8Rhu0DvLM739A5rmjJ51QcW9SFXjcvR85oYOhSKTsd65pqdKWIV59ZO/7kKTDJLbvYw9XVRIyTXKJdfm4rOjE18yT8IHM/euZa0Z0fLvBSIh7h925QLoXR80WNfnqOHHP7Qk5aj+dTLX4E3hhIkafoGd15/IDT/lPTVSVr233dy6OkJtiLm0yBu+byeE2Yc59pVrDdKyPjxgD4h6r6vcFwpYNHMxVBaE2ApmfyTTjf5jQnWRymG7iAAAAAElFTkSuQmCC);
+  	border-color: #BDC6FF #59639A #59639A #BDC6FF;
+        }
 
-    @keyframes shine {
-      0% { background-position: 0% center; }
-      100% { background-position: 200% center; }
-    }
+        .button:active {
+            transform: translateY(2px);
+        }
 
-    .dissolve {
-      animation: dissolveText 0.8s cubic-bezier(.66,.01,.57,.99) forwards;
-    }
-    @keyframes dissolveText {
-      0% { opacity: 1; filter: blur(0px); letter-spacing: 0.07em; }
-      60% { opacity: 0.3; filter: blur(3px); letter-spacing: 0.15em; }
-      100% { opacity: 0; filter: blur(8px); letter-spacing: 0.25em; }
-    }
+        .bottom-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
 
-    .fade-words,
-    .projects-zone {
-      opacity: 0;
-      transition: opacity 0.8s cubic-bezier(.36,-0.01,.57,.99);
-      will-change: opacity;
-    }
-    .fade-words.visible,
-    .projects-zone.visible {
-      opacity: 1;
-      transition: opacity 1s cubic-bezier(.36,-0.01,.57,.99);
-    }
+        .small-button {
+            width: 196px;
+            height: 35px;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMQAAAAPCAAAAACe4j/AAAAEuElEQVRIx1WWS5Ibuw5EtddrdRRJJE4iSKrb4c2/AUuy30iK+jEBHCTwAICMCgAKiGhKVQUwKzJHQo4mQGBy7AIvk1E2AQKhFt6bUGD1gILy0DkD4dmzACkGyzCScgFgQmLZr4LpQpC56QB2wgSYE8i1fd6xd1yPHIAKwAs14Undx2LIHK0X6vdFbzTa6CNBLQE8Y5rapn7oAl3KSDKC6cLfL6sLnIVG7ffnyUgvQ6rwLjUZdIVqWz0iEXXCZ+TJsV8feUdoPHDk+a/IeAbq0ldLT59jtHweHwmKS6gFSUYCqKcVsPami1pEnqolkCMBiAS87FXTICp03geYUr8TV8un3KuyC0BfTUzihOCdwjUya1bkT9VWe+AaFOoJzHdtERXRe/eulyEDhC6pjYwr+JQuIDU9/0wQBnJEAkd+9i6IRTJrV7YWnGfwLA6ESphkBoCu88M0YH1CTTOiRUpDdwpGkkP5yL9phhwn+QVxDarAXq513y9bLKgxBGR/CjDyMl4ECd6lO82CaMLbEHGHp1R8ePDERj392ssaCOigNjJ+dXXl6OLUFfVx6dA1BFJLlHpkUHPam095C3QJLIjn6OLIOB3xe0JS85Zd+govg1/z/UhtG3RdVW98yxNp5I0Vtf/U+6y/dJ/yHtSK4q7G9ARscC3/Df/kXTwiT3d6ovjEISLJIVEvBwWeCXlALZTbpy85xqWuf3sNiBBUmYjI+BqN6aNQqDWpipSYf3W1nOV/WALoykjIiCPreSn97UigsjZdPA5s3AmCDIxaVO0Fa1fV/qkaiijPPz/bEeRyLSBDI8K8j37TO8aH7vmOqUUQ1DboYhvqd+FlFGEo+2T75MbLGnjvPeu7Pl521Ap14dcR3h7p75qv4xieqnNDoyCPLt/yKkf5gOUXl+6S3d9Syq/982fz+fhpsm28C5EhJcxsWWQke6KoPMA7tqm7kKcrn6FLhWcoqCNCxDPyQ8wEKR73nIlEX8GpARSJX7/rzeNtWPD/Dl2IwtOYMwV7osGsHYJanzeU7KqIZVCTcrT0IEbyD4d1e1dkBtW2qLhLXK7a1ogDqsjI1DR4PY7nHEqfF9tn8HUJL+eQ/lGOXdwI1++57CqgmDaReM9CZYLAk4D4ymqti4KZI9Htz9OnrcuOhCQEqJfXaxHPAFG/l/ee1GFJPXmPryYUiUGPutnRGXkagmnjHk5RNpm7xxiclm6CjJEQ4+MD4xPmuT9Ef4b3YT3B51a7d4Np76PF0cavuC+SoaH6PlilipEakoJBJETWT3k7Hf+1REPj2fIx95t5ct6u9S5v3KM2fv2Ve29ax9yC98zT2IZot61MHyYtdPF92nguZ29xfcVxSu9Nj5Gl8G3wcVoW8n1Q/f6BHFEAyy5R2aRIdYH8XfV4453vHKcnqarXPD6mdrD0rlVV5xBPF2xuJM5Oo0SdaaqGMjJva7ii6bYv74IzPMo5pGebpu72ghypwTR+WWDuhQOkFijGyAzF3GXh11lEH0hkPINZivpTqLEtVm2j1hVcn/S0//q0es5dbyxOErxKivQ+bHotvzcT3/XztPf20XqG6fJZMePT2X6ts+nlm9LoSYHMiHuJjGXniB7v2fo/5qT4nuxYg6AAAAAASUVORK5CYII=');
+            background-size: cover;
+            cursor: pointer;
+            font-family: 'Minecraftia', monospace;
+            font-size: 16px;
+            color: #FFFFFF;
+            text-shadow: 2px 2px 0px #3F3F3F;
+            transition: all 0.1s;
+            image-rendering: pixelated;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-color: #AAA #565656 #565656 #AAA;
+  	        outline: 2px solid #000;
+            margin-top: 24px;
 
-    .fade-words {
-      display: flex;
-      gap: 3vw;
-      justify-content: center;
-      align-items: center;
-      height: 1em;
-      position: relative;
-      z-index: 2;
-      margin-bottom: 3vw;
-    }
-    .fade-word {
-      opacity: 0;
-      font-size: 3vw;
-      font-weight: bold;
-      letter-spacing: 0.09em;
-      animation: fadeIn 1s forwards;
-      transition: opacity 0.5s;
-    }
-    .fade-word:nth-child(1) { animation-delay: 0.1s; }
-    .fade-word:nth-child(2) { animation-delay: 0.2s; }
-    .fade-word:nth-child(3) { animation-delay: 0.3s; }
+        }
 
-    .icon-link {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 2em;
-      height: 2em;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.07);
-      transition: background 0.2s, box-shadow 0.2s;
-      box-shadow: 0 2px 10px #a251ff99;
-      text-decoration: none;
-    }
-    .icon-link:hover {
-      background: rgba(255,255,255,0.18);
-      box-shadow: 0 4px 18px #a251ff99;
-    }
-    .icon-link img {
-      width: 1.4em;
-      height: 1.4em;
-      object-fit: contain;
-    }
+        .small-button:hover {
+	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMQAAAAPCAMAAACMV5AuAAAAVFBMVEVtd7ZteLZverdwerdwe7hxfLhyfbl0frl1f7p2gLt4grx6hLx7hb18hr5+iL+AisCBi8GCjMGEjsKGkMOHkcSIksSKk8WLlMWLlcaMlcaNlsePmMdwBHmVAAAEjElEQVRIx1WW27YbKw5F3Ul2GYTWFAJX+pyd///PfgDsTg0/mSqQ1k08AEAeDkAA7kXyDAeyu2QCWREgCGSvAAbIE/D9U2m8Ji4Drw0CEhP7EMiqBFxmDMBEkHvd5AziDsjoCKQXddUl1nuZgMZrf0PMdj1kgNY+Ay+CJPg8kj1rR3X/GS9kxaoJVFaB6QkxIX5TBX65mpAZGQH3HaoCFMj6/GxuYgDyTsyup1hfxwxVN+F08ANGANyf8jqAPaBpranJvhxV+VV08JGPVScmcL8W4EIuAFWFHMZrUkUfNC3WtIsEaFogMWJRl839MES61w1cjMUsI1fb7GKaoENMOdFNykzXPz2mlwekkXjV4ioO9b15rZWZd4AaCL9cxdSutl8buIOUkd8JTgAy01IKoFoFPhAZr65SbDHgxFIGKi5IpLaKdlafAHxaVWDt2SSZ24LQhEx6aLGyj7RtELDLiA7EiD72ehBiQJo5oPq1nOQMYGAIYoY2AwIrImaA+25P8vZRa0KgqrjnQIaACiom/1G9Sla3GUHVLl/mMl/mxeUPGT0T5seAeeAQtF9WV2F7cX4niJ4DYmBd12oh7jymyRkBuq6M81mQuExHVv313beo9VH3ojfM2zZ8AkTG8X7EeDs6OZw+mrY7E5l/gqQJmZx+YySQAi1/dqQZy0as4FL1d7nrcfd1kjWTX1ZIYESTUCnuPZE7+anrqcxlz3diUX2HowHCf15S3AvxrnhRxeMwtQACGYGKZ7wGjNl7vH73MHdP8s/vSXM0FiRqMnPowfbjRsfe6n7nZ/FGIyfgF6+A/t1XTrcWB3Q42AxkMOfMfuJotRPgqGqFMfB8KO6eN+BEpO8F2eLZ18YO0GUdmEDcXMcNey+XuOfvP5P35guSVxAzWRYUpIoSuZiJrJ/p4zPouw0pwX+6XwpIcyNWEcJ/uf5Svuyx+ncTfhmotEhIBPe/8f961F/jI5aQfSs3WFOwChnZZxPk+HQjZu/WBuDFVwobZnoLISBOdkmNLFPE9iadiImsgTcdTDKA8dj1qBT518Xcg6+6L0Yl/nqCLeH+b46InkCSETTBzEQBRoPEwS9lKVUkpEx426M3oIMHYQLhK/B6jHvgXw6if4+YM4mlJdWDpLw4MhHgjwBZgIt+ZJdAVENOEkiv6mY4yy5nFPjnQmGfGVy0IqP+cmbsWF7Se/rT+5ZBzHPdKfajHW2ouWldPJaoTDJ3GUYTNMV/IyaiPYqQuX0VPXK+ra3Mc8c5Wlkp4D/e5S5htjXU3HnPPJsBXraRM/rSpOMX99zMoVradRl9AMxJdVPIYgf8Rhu0DvLM739A5rmjJ51QcW9SFXjcvR85oYOhSKTsd65pqdKWIV59ZO/7kKTDJLbvYw9XVRIyTXKJdfm4rOjE18yT8IHM/euZa0Z0fLvBSIh7h925QLoXR80WNfnqOHHP7Qk5aj+dTLX4E3hhIkafoGd15/IDT/lPTVSVr233dy6OkJtiLm0yBu+byeE2Yc59pVrDdKyPjxgD4h6r6vcFwpYNHMxVBaE2ApmfyTTjf5jQnWRymG7iAAAAAElFTkSuQmCC);
+  	border-color: #BDC6FF #59639A #59639A #BDC6FF;
+        }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(15px);}
-      to { opacity: 1; transform: translateY(0);}
-    }
+        .small-button:active {
+            transform: translateY(2px);
+        }
 
-    .projects-zone {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      margin-top: 2vw;
-      padding: 2vw 3vw;
-      background: rgba(36, 17, 42, 0.7);
-      border-radius: 1vw;
-      box-shadow: 0 2px 20px #a251ff55;
-      min-width: 340px;
-      max-width: 94vw;
-      z-index: 2;
-      position: relative;
-      animation: fadeInZone 0.8s;
-    }
-    .projects-title {
-      font-size: 1.8em;
-      font-weight: 600;
-      color: #c689ff;
-      margin-bottom: 1.2vw;
-      letter-spacing: 0.06em;
-      text-align: center;
-      text-shadow: 0 2px 12px #7439b877;
-    }
+        .corner-buttons {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 8px;
+            flex-shrink: 0 ;
+        }
 
-    .projects-list {
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      gap: 5vw;
-      width: 100%;
-      margin-top: 2vw;
-      position: relative;
-      height: 10vw;
-    }
-    .project-item {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255,255,255,0.07);
-      border-radius: 50%;
-      width: 7vw;
-      height: 7vw;
-      font-size: 1.15em;
-      color: #fff;
-      text-decoration: none;
-      transition: background 0.2s, box-shadow 0.2s;
-      box-shadow: 0 1px 8px #a251ff22;
-      cursor: pointer;
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-    }
-    .project-item:hover {
-      background: rgba(255,255,255,0.18);
-      color: #c689ff;
-      box-shadow: 0 3px 16px #a251ff55;
-      text-decoration: underline;
-    }
-    .project-item:nth-child(1) {
-      transform: translate(-5vw) rotate(-30deg) translateY(-8vw) rotate(30deg);
-    }
-    .project-item:nth-child(2) {
-      transform: translate(-50%, -50%) translateY(2.5vw);
-    }
-    .project-item:nth-child(3) {
-      transform: translate(-2vw) rotate(30deg) translateY(-8vw) rotate(-30deg);
-    }
+        .icon-button {
+            width: 35px;
+            height: 35px;
+	        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMQAAAAPCAAAAACe4j/AAAAEuElEQVRIx1WWS5Ibuw5EtddrdRRJJE4iSKrb4c2/AUuy30iK+jEBHCTwAICMCgAKiGhKVQUwKzJHQo4mQGBy7AIvk1E2AQKhFt6bUGD1gILy0DkD4dmzACkGyzCScgFgQmLZr4LpQpC56QB2wgSYE8i1fd6xd1yPHIAKwAs14Undx2LIHK0X6vdFbzTa6CNBLQE8Y5rapn7oAl3KSDKC6cLfL6sLnIVG7ffnyUgvQ6rwLjUZdIVqWz0iEXXCZ+TJsV8feUdoPHDk+a/IeAbq0ldLT59jtHweHwmKS6gFSUYCqKcVsPami1pEnqolkCMBiAS87FXTICp03geYUr8TV8un3KuyC0BfTUzihOCdwjUya1bkT9VWe+AaFOoJzHdtERXRe/eulyEDhC6pjYwr+JQuIDU9/0wQBnJEAkd+9i6IRTJrV7YWnGfwLA6ESphkBoCu88M0YH1CTTOiRUpDdwpGkkP5yL9phhwn+QVxDarAXq513y9bLKgxBGR/CjDyMl4ECd6lO82CaMLbEHGHp1R8ePDERj392ssaCOigNjJ+dXXl6OLUFfVx6dA1BFJLlHpkUHPam095C3QJLIjn6OLIOB3xe0JS85Zd+govg1/z/UhtG3RdVW98yxNp5I0Vtf/U+6y/dJ/yHtSK4q7G9ARscC3/Df/kXTwiT3d6ovjEISLJIVEvBwWeCXlALZTbpy85xqWuf3sNiBBUmYjI+BqN6aNQqDWpipSYf3W1nOV/WALoykjIiCPreSn97UigsjZdPA5s3AmCDIxaVO0Fa1fV/qkaiijPPz/bEeRyLSBDI8K8j37TO8aH7vmOqUUQ1DboYhvqd+FlFGEo+2T75MbLGnjvPeu7Pl521Ap14dcR3h7p75qv4xieqnNDoyCPLt/yKkf5gOUXl+6S3d9Syq/982fz+fhpsm28C5EhJcxsWWQke6KoPMA7tqm7kKcrn6FLhWcoqCNCxDPyQ8wEKR73nIlEX8GpARSJX7/rzeNtWPD/Dl2IwtOYMwV7osGsHYJanzeU7KqIZVCTcrT0IEbyD4d1e1dkBtW2qLhLXK7a1ogDqsjI1DR4PY7nHEqfF9tn8HUJL+eQ/lGOXdwI1++57CqgmDaReM9CZYLAk4D4ymqti4KZI9Htz9OnrcuOhCQEqJfXaxHPAFG/l/ee1GFJPXmPryYUiUGPutnRGXkagmnjHk5RNpm7xxiclm6CjJEQ4+MD4xPmuT9Ef4b3YT3B51a7d4Np76PF0cavuC+SoaH6PlilipEakoJBJETWT3k7Hf+1REPj2fIx95t5ct6u9S5v3KM2fv2Ve29ax9yC98zT2IZot61MHyYtdPF92nguZ29xfcVxSu9Nj5Gl8G3wcVoW8n1Q/f6BHFEAyy5R2aRIdYH8XfV4453vHKcnqarXPD6mdrD0rlVV5xBPF2xuJM5Oo0SdaaqGMjJva7ii6bYv74IzPMo5pGebpu72ghypwTR+WWDuhQOkFijGyAzF3GXh11lEH0hkPINZivpTqLEtVm2j1hVcn/S0//q0es5dbyxOErxKivQ+bHotvzcT3/XztPf20XqG6fJZMePT2X6ts+nlm9LoSYHMiHuJjGXniB7v2fo/5qT4nuxYg6AAAAAASUVORK5CYII=);
+            background-size: cover;
+            cursor: pointer;
+            font-size: 16px;
+            color: #FFFFFF;
+            text-shadow: 2px 2px 0px #3F3F3F;
+            transition: all 0.1s;
+            image-rendering: pixelated;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-color: #AAA #565656 #565656 #AAA;
+  	        outline: 2px solid #000;
+            margin-top: 24px;
+        }
 
-    @keyframes fadeInZone {
-      from { opacity: 0; transform: translateY(20px);}
-      to { opacity: 1; transform: translateY(0);}
-    }
+        .icon-button:hover {
+	        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMQAAAAPCAMAAACMV5AuAAAAVFBMVEVtd7ZteLZverdwerdwe7hxfLhyfbl0frl1f7p2gLt4grx6hLx7hb18hr5+iL+AisCBi8GCjMGEjsKGkMOHkcSIksSKk8WLlMWLlcaMlcaNlsePmMdwBHmVAAAEjElEQVRIx1WW27YbKw5F3Ul2GYTWFAJX+pyd///PfgDsTg0/mSqQ1k08AEAeDkAA7kXyDAeyu2QCWREgCGSvAAbIE/D9U2m8Ji4Drw0CEhP7EMiqBFxmDMBEkHvd5AziDsjoCKQXddUl1nuZgMZrf0PMdj1kgNY+Ay+CJPg8kj1rR3X/GS9kxaoJVFaB6QkxIX5TBX65mpAZGQH3HaoCFMj6/GxuYgDyTsyup1hfxwxVN+F08ANGANyf8jqAPaBpranJvhxV+VV08JGPVScmcL8W4EIuAFWFHMZrUkUfNC3WtIsEaFogMWJRl839MES61w1cjMUsI1fb7GKaoENMOdFNykzXPz2mlwekkXjV4ioO9b15rZWZd4AaCL9cxdSutl8buIOUkd8JTgAy01IKoFoFPhAZr65SbDHgxFIGKi5IpLaKdlafAHxaVWDt2SSZ24LQhEx6aLGyj7RtELDLiA7EiD72ehBiQJo5oPq1nOQMYGAIYoY2AwIrImaA+25P8vZRa0KgqrjnQIaACiom/1G9Sla3GUHVLl/mMl/mxeUPGT0T5seAeeAQtF9WV2F7cX4niJ4DYmBd12oh7jymyRkBuq6M81mQuExHVv313beo9VH3ojfM2zZ8AkTG8X7EeDs6OZw+mrY7E5l/gqQJmZx+YySQAi1/dqQZy0as4FL1d7nrcfd1kjWTX1ZIYESTUCnuPZE7+anrqcxlz3diUX2HowHCf15S3AvxrnhRxeMwtQACGYGKZ7wGjNl7vH73MHdP8s/vSXM0FiRqMnPowfbjRsfe6n7nZ/FGIyfgF6+A/t1XTrcWB3Q42AxkMOfMfuJotRPgqGqFMfB8KO6eN+BEpO8F2eLZ18YO0GUdmEDcXMcNey+XuOfvP5P35guSVxAzWRYUpIoSuZiJrJ/p4zPouw0pwX+6XwpIcyNWEcJ/uf5Svuyx+ncTfhmotEhIBPe/8f961F/jI5aQfSs3WFOwChnZZxPk+HQjZu/WBuDFVwobZnoLISBOdkmNLFPE9iadiImsgTcdTDKA8dj1qBT518Xcg6+6L0Yl/nqCLeH+b46InkCSETTBzEQBRoPEwS9lKVUkpEx426M3oIMHYQLhK/B6jHvgXw6if4+YM4mlJdWDpLw4MhHgjwBZgIt+ZJdAVENOEkiv6mY4yy5nFPjnQmGfGVy0IqP+cmbsWF7Se/rT+5ZBzHPdKfajHW2ouWldPJaoTDJ3GUYTNMV/IyaiPYqQuX0VPXK+ra3Mc8c5Wlkp4D/e5S5htjXU3HnPPJsBXraRM/rSpOMX99zMoVradRl9AMxJdVPIYgf8Rhu0DvLM739A5rmjJ51QcW9SFXjcvR85oYOhSKTsd65pqdKWIV59ZO/7kKTDJLbvYw9XVRIyTXKJdfm4rOjE18yT8IHM/euZa0Z0fLvBSIh7h925QLoXR80WNfnqOHHP7Qk5aj+dTLX4E3hhIkafoGd15/IDT/lPTVSVr233dy6OkJtiLm0yBu+byeE2Yc59pVrDdKyPjxgD4h6r6vcFwpYNHMxVBaE2ApmfyTTjf5jQnWRymG7iAAAAAElFTkSuQmCC);
+  	        border-color: #BDC6FF #59639A #59639A #BDC6FF;
+        }
 
-    /* 📱 Adaptation mobile */
-    @media (max-width: 768px) {
-      body {
-        flex-direction: column;
-        justify-content: flex-start;
-        padding-top: 8vh;
-      }
+        .version {
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+            font-size: 14px;
+            color: #FFFFFF;
+            text-shadow: 1px 1px 0px #000000;
+        }
 
-      h1#title {
-        font-size: 10vw;
-        text-align: center;
-        margin-bottom: 8vw;
-      }
-
-      .fade-words {
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 6vw;
-        margin-bottom: 8vw;
-      }
-      .fade-word {
-        font-size: 7vw;
-      }
-      .icon-link {
-        width: 3.5em;
-        height: 3.5em;
-      }
-      .icon-link img {
-        width: 2em;
-        height: 2em;
-      }
-
-      .projects-zone {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 6vw 4vw;
-        width: 90%;
-        margin: 0 auto;
-      }
-      .projects-title {
-        font-size: 1.6em;
-        margin-bottom: 6vw;
-        text-align: center;
-      }
-
-      .projects-list {
-        flex-direction: column;
-        gap: 6vw;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: auto;
-      }
-      .project-item {
-        position: static;
-        width: 20vw;
-        height: 20vw;
-        font-size: 1em;
-        transform: none !important;
-      }
-
-      .audio-control {
-        position: fixed;
-        bottom: 15px;
-        left: 50%;
-        transform: translateX(-50%);
-        justify-content: center;
-        width: auto;
-      }
-      #audio-icon {
-        font-size: 32px;
-      }
-      #audio-slider {
-        width: 120px;
-        height: 12px;
-      }
-    }
-  </style>
+        .copyright {
+            position: absolute;
+            bottom: 0px;
+            right: 0px;
+            font-size: 14px;
+            color: #FFFFFF;
+            text-shadow: 1px 1px 0px #000000;
+        }
+    </style>
 </head>
 <body>
-  <canvas class="dust-canvas"></canvas>
-  <h1 id="title" class="parallax-title">az_ttv</h1>
-  <div class="fade-words" style="display:none;">
-    <a class="fade-word icon-link instagram" href="https://www.instagram.com/amd_ewen" target="_blank" title="Instagram">
-      <img src="instagram.png" alt="Instagram"/>
-    </a>
-    <a class="fade-word icon-link tiktok" href="https://www.tiktok.com/@az_ttv" target="_blank" title="TikTok">
-      <img src="tiktok.png" alt="TikTok"/>
-    </a>
-    <a class="fade-word icon-link youtube" href="https://www.youtube.com/@az11ttv" target="_blank" title="YouTube">
-      <img src="youtube.png" alt="YouTube"/>
-    </a>
-  </div>
-  <div class="projects-zone" id="projects-zone">
-    <div class="projects-title">Mes Projets</div>
-    <div class="projects-list">
-      <a class="project-item" href="https://discord.gg/HefFTCS4cp" target="_blank">
-        <img src="https://i.imgur.com/uSGvWJT.gif" height="150px" width="150px">
-      </a>
-      <a style="color:#414345" class="project-item" href="https://google.com" target="_blank">À venir...</a>
-      <a style="color:#414345" class="project-item" href="https://google.com" target="_blank">À venir...</a>
+    <!-- Placeholder for video background -->
+    <video id="video-background" autoplay muted loop>
+        <source src="https://rr5---sn-25glenlr.googlevideo.com/videoplayback?expire=1759415242&ei=ajfeaPj8OLucvcAPpY-biQU&ip=112.120.48.87&id=o-AFEJNkl6m7AEAeymt_n5Dg8WzKIQUzpzAHdqD8mS4AX4&itag=308&aitags=133%2C134%2C135%2C136%2C160%2C242%2C243%2C244%2C247%2C278%2C298%2C299%2C302%2C303%2C308%2C315%2C394%2C395%2C396%2C397%2C398%2C399%2C400%2C401&source=youtube&requiressl=yes&xpc=EgVo2aDSNQ%3D%3D&rms=au%2Cau&bui=ATw7iSXLJfHAgwjr3Ne-XY67zu7FAvMbduAU9IqLcwDgoK6Nf7fIO_ls3qG67QQ8uaomCY9f0Zc5bP9o&vprv=1&svpuc=1&mime=video%2Fwebm&ns=ok7nwhh6xqz1kwf6Lfl8d3UQ&rqh=1&gir=yes&clen=23714145475&dur=14399.999&lmt=1742733331727518&keepalive=yes&lmw=1&fexp=24350737,24350827,24351316,24351318,24351528,24352001,24352157,24352540,24352805,24352807,24352916,24352918,24352960,24352981,24352983,24353009,24353011,24353044,24353046,24353151,24353223,24353225,24353287,24353289,24353814,51557447,51565116,51565682,51580970&c=TVHTML5&sefc=1&txp=5532534&n=KprlOxBWuJvfNA&sparams=expire%2Cei%2Cip%2Cid%2Caitags%2Csource%2Crequiressl%2Cxpc%2Cbui%2Cvprv%2Csvpuc%2Cmime%2Cns%2Crqh%2Cgir%2Cclen%2Cdur%2Clmt&sig=AJfQdSswRAIgPnIUy12LTflipkTk3H_b4TFOcSXQOdmrSA5lQdxKTFsCIAy9DPa2jl38-2MWY0lzwELvYevylkrSICghltNf0TPO&redirect_counter=1&rm=sn-i3bdr7e&rrc=104&req_id=a47ce4398d4a3ee&cms_redirect=yes&ipbypass=yes&met=1759393664,&mh=Lb&mip=2a01:cb05:81c4:6200:a8f4:e036:dd15:350b&mm=31&mn=sn-25glenlr&ms=au&mt=1759393286&mv=m&mvi=5&pl=42&lsparams=ipbypass,met,mh,mip,mm,mn,ms,mv,mvi,pl,rms&lsig=APaTxxMwRQIhAPdOeonT-4ohYymzhX7btJjkuPp3tc-UgQYgFs58B_6yAiAh4cLWOUoODBF01Wuo3ptCdkNKXOqGskqm8rQDBJIgLA%3D%3D" type="video/mp4">
+    </video>
+
+    <div class="container">
+        <div class="logo-container">
+            <img src="https://i.imgur.com/0j1rp0X.png" alt="Minecraft Logo" class="logo">
+            <div class="subtitle">Also try Terraria!</div>
+        </div>
+
+        <div class="menu">
+            <button class="button">Solo</button>
+            <button class="button">Multijoueur</button>
+            <button class="button">Minecraft Realms</button>
+        </div>
+
+        <div class="bottom-buttons">
+            <button class="icon-button">🌐</button>
+            <button class="small-button">Options...</button>
+            <button class="small-button">Quitter le Jeu</button>
+            <button class="icon-button">👤</button>
+        </div>
+
+        <div class="version">Minecraft 1.21.9</div>
+        <div class="copyright">Copyright Mojang AB. Ne pas distribuer</div>
     </div>
-  </div>
-  <div class="audio-control">
-    <span id="audio-icon">🔈</span>
-    <input type="range" id="audio-slider" min="0" max="100" value="20" step="1">
-  </div>
 
-  <script>
-    const canvas = document.querySelector('.dust-canvas');
-    const ctx = canvas.getContext('2d');
-    let w = window.innerWidth, h = window.innerHeight;
-    canvas.width = w;
-    canvas.height = h;
-
-    function resizeCanvas() {
-      w = window.innerWidth;
-      h = window.innerHeight;
-      canvas.width = w;
-      canvas.height = h;
-    }
-    window.addEventListener('resize', resizeCanvas);
-
-    const NUM_PARTICLES = Math.floor((w * h) / 4500);
-    const particles = [];
-    for (let i = 0; i < NUM_PARTICLES; i++) {
-      particles.push({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        r: Math.random() * 1.8 + 0.7,
-        a: Math.random() * 2 * Math.PI,
-        speed: Math.random() * 0.12 + 0.05,
-        opacity: Math.random() * 0.5 + 0.2
-      });
-    }
-
-    function animateDust() {
-      ctx.clearRect(0, 0, w, h);
-      for (let p of particles) {
-        p.x += Math.cos(p.a) * p.speed;
-        p.y += Math.sin(p.a) * p.speed;
-        p.a += (Math.random() - 0.5) * 0.01;
-
-        if (p.x < 0) p.x = w;
-        if (p.x > w) p.x = 0;
-        if (p.y < 0) p.y = h;
-        if (p.y > h) p.y = 0;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, 2 * Math.PI);
-        ctx.fillStyle = `rgba(255,255,255,${p.opacity})`;
-        ctx.shadowColor = '#fff';
-        ctx.shadowBlur = 8;
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      }
-      requestAnimationFrame(animateDust);
-    }
-    animateDust();
-
-    const title = document.getElementById('title');
-    const fadeWords = document.querySelector('.fade-words');
-    const projectsZone = document.getElementById('projects-zone');
-
-    title.addEventListener('click', function() {
-      title.classList.add('dissolve');
-      setTimeout(() => {
-        title.style.display = 'none';
-
-        fadeWords.style.display = 'flex';
-        fadeWords.classList.add('visible');
-        fadeWords.querySelectorAll('.fade-word').forEach((w, i) => {
-          w.style.opacity = '0';
-          w.style.animation = 'none';
-          void w.offsetWidth;
-          w.style.animation = `fadeIn 1s forwards`;
-          w.style.animationDelay = `${0.1 + 0.2*i}s`;
+    <script>
+        // Add click handlers
+        const buttons = document.querySelectorAll('.button, .small-button');
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                console.log('Button clicked:', button.textContent);
+            });
         });
-
-        projectsZone.style.display = 'flex';
-        setTimeout(() => {
-          projectsZone.classList.add('visible');
-        }, 100);
-
-      }, 800);
-    });
-
-    window.addEventListener('DOMContentLoaded', function() {
-      var audio = document.getElementById('fond-audio');
-      if (audio) {
-        audio.volume = 0.2;
-        audio.play().catch(()=>{
-          document.addEventListener('click', () => {
-            audio.play().catch(()=>{});
-          }, { once: true });
-        });
-      }
-    });
-
-    const audio = document.getElementById('fond-audio');
-    const slider = document.getElementById('audio-slider');
-    const icon = document.getElementById('audio-icon');
-
-    function updateIcon(volume) {
-      if (volume === 0) {
-        icon.textContent = "🔇";
-      } else if (volume < 0.333) {
-        icon.textContent = "🔈";
-      } else if (volume < 0.666) {
-        icon.textContent = "🔉";
-      } else {
-        icon.textContent = "🔊";
-      }
-    }
-
-    window.addEventListener('DOMContentLoaded', function() {
-      if (audio) {
-        audio.volume = slider.value / 100;
-        updateIcon(audio.volume);
-        audio.play().catch(()=>{
-          document.addEventListener('click', () => {
-            audio.play().catch(()=>{});
-          }, { once: true });
-        });
-      }
-    });
-
-    slider.addEventListener('input', () => {
-      audio.volume = slider.value / 100;
-      updateIcon(audio.volume);
-    });
-  </script>
+    </script>
 </body>
 </html>
