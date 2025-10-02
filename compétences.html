@@ -34,34 +34,30 @@
 
   .server-list {
     position: relative;
-    top: 60px; /* espace sous le header */
+    top: 60px;
     margin: 0 auto;
     width: 600px;
     background: transparent;
     border: none;
-    overflow-y: auto; /* active le scroll interne */
+    overflow-y: auto;
     overflow-x: hidden;
-    height: calc(100vh - 192px); /* hauteur dispo entre header et footer */
+    height: calc(100vh - 192px);
     padding: 10px 0;
   }
 
-/* Largeur de la barre */
 .server-list::-webkit-scrollbar {
   width: 15px;
 }
 
-/* Couleur de l’arrière-plan de la barre */
 .server-list::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 1);
 }
 
-/* Curseur de la barre */
 .server-list::-webkit-scrollbar-thumb {
   background: #c9c9c9;
-  border: 2px solid #222; /* effet Minecraft carré */
+  border: 2px solid #222;
 }
 
-/* Effet hover */
 .server-list::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, #6bf5ff, #00aaff);
 }
@@ -294,25 +290,16 @@
       <button class="btn" onclick="location.reload()">Actualiser</button>
       <button class="btn" onclick="window.location.href='index.html'">Retour</button>
     </div>
-    
   </footer>
-
   <script>
-    // Charger le son
-  const clickSound = new Audio("click.wav"); // exemple de son
-
-  // Sélectionner tous les boutons
+  const clickSound = new Audio("click.wav");
   const buttons = document.querySelectorAll("button");
-
-  // Ajouter un événement "click" sur chaque bouton
   buttons.forEach(btn => {
     btn.addEventListener("click", () => {
-      clickSound.currentTime = 0; // remet au début si clic rapide
+      clickSound.currentTime = 0;
       clickSound.play();
     });
   });
   </script>
-
 </body>
-
 </html>
