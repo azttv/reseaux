@@ -162,7 +162,6 @@
   <header>Projets</header>
 
   <div class="server-list">
-    <!-- True Vanilla redirige vers Google -->
     <div class="server" onclick="window.location.href='https://www.true-vanilla.fr'">
       <img src="https://i.imgur.com/rszeXvy.png" alt="logo serveur">
       <div class="server-info">
@@ -172,7 +171,11 @@
       <div class="ping-bar"></div>
     </div>
   </div>
-
+<div class="mobile-message">
+  <p><i class="fa-solid fa-desktop"></i></p>
+  <p>Disponible uniquement sur PC</p>
+  <p>Reviens vite !</p>
+</div>
   <footer>
     <div class="footer-row">
       <button class="btn disabled">Rejoindre</button>
@@ -186,7 +189,6 @@
       <button class="btn" onclick="window.location.href='index.html'">Retour</button>
     </div>
   </footer>
-
   <script>
     window.addEventListener("DOMContentLoaded", () => {
       const pingText = document.getElementById("ping-text");
@@ -195,21 +197,14 @@
         pingText.style.color = "#54daf4";
       }, 1000);
     });
-      // Charger le son
-  const clickSound = new Audio("click.wav"); // exemple de son
-
-  // Sélectionner tous les boutons
+  const clickSound = new Audio("click.wav");
   const buttons = document.querySelectorAll("button");
-
-  // Ajouter un événement "click" sur chaque bouton
   buttons.forEach(btn => {
     btn.addEventListener("click", () => {
-      clickSound.currentTime = 0; // remet au début si clic rapide
+      clickSound.currentTime = 0;
       clickSound.play();
     });
   });
   </script>
-
 </body>
-
 </html>
