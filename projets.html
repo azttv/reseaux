@@ -2,8 +2,9 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.cdnfonts.com/css/minecraftia" rel="stylesheet"/>
-  <title>Minecraft - Projets</title>
+  <title>Minecraft - Multijoueur</title>
   <style>
     body {
       margin: 0;
@@ -20,7 +21,7 @@
       padding: 15px;
       font-size: 20px;
       color: #fff;
-      background: url("https://i.imgur.com/mfEvGla.png") repeat;
+      background: url("https://static.wikia.nocookie.net/minecraft_gamepedia/images/c/c1/Dirt_background_JE2.png/revision/latest?cb=20210507124914") repeat;
       border-bottom: 2px solid #222;
     }
 
@@ -91,7 +92,7 @@
     footer {
       font-family: "Minecraftia", monospace;
       padding: 15px;
-      background: url("https://i.imgur.com/mfEvGla.png") repeat;
+      background: url("https://static.wikia.nocookie.net/minecraft_gamepedia/images/c/c1/Dirt_background_JE2.png/revision/latest?cb=20210507124914") repeat;
       border-top: 2px solid #222;
       display: flex;
       flex-direction: column;
@@ -134,6 +135,26 @@
       border: none;
       padding: 0px 15px;
     }
+
+      .mobile-message {
+      display: none;
+    }
+    
+    @media screen and (max-width: 768px) {
+    header,
+    footer,
+    .server-list {
+      display: none;
+    }
+      .mobile-message {
+    align-self: center;
+    display: block;
+    margin-top: 50%;
+    font-size: 18px;
+    line-height: 2;
+    text-shadow: 2px 2px #000;
+    }
+  }
   </style>
 </head>
 <body>
@@ -141,6 +162,7 @@
   <header>Projets</header>
 
   <div class="server-list">
+    <!-- True Vanilla redirige vers Google -->
     <div class="server" onclick="window.location.href='https://www.true-vanilla.fr'">
       <img src="https://i.imgur.com/rszeXvy.png" alt="logo serveur">
       <div class="server-info">
@@ -173,9 +195,20 @@
         pingText.style.color = "#54daf4";
       }, 1000);
     });
+      // Charger le son
+  const clickSound = new Audio("click.wav"); // exemple de son
+
+  // Sélectionner tous les boutons
+  const buttons = document.querySelectorAll("button");
+
+  // Ajouter un événement "click" sur chaque bouton
+  buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      clickSound.currentTime = 0; // remet au début si clic rapide
+      clickSound.play();
+    });
+  });
   </script>
 
 </body>
 </html>
-
-

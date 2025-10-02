@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <link href="https://fonts.cdnfonts.com/css/minecraftia" rel="stylesheet"/>
-  <title>Minecraft - Compétences</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <title>Minecraft - Multijoueur</title>
   <style>
     body {
       margin: 0;
@@ -26,37 +27,41 @@
     padding: 15px;
     font-size: 20px;
     color: #fff;
-    background: url("https://i.imgur.com/mfEvGla.png") repeat;
+    background: url("https://static.wikia.nocookie.net/minecraft_gamepedia/images/c/c1/Dirt_background_JE2.png/revision/latest?cb=20210507124914") repeat;
     border-bottom: 2px solid #222;
     height: 28px;
   }
 
   .server-list {
     position: relative;
-    top: 60px;
+    top: 60px; /* espace sous le header */
     margin: 0 auto;
     width: 600px;
     background: transparent;
     border: none;
-    overflow-y: auto; 
+    overflow-y: auto; /* active le scroll interne */
     overflow-x: hidden;
-    height: calc(100vh - 192px); 
+    height: calc(100vh - 192px); /* hauteur dispo entre header et footer */
     padding: 10px 0;
   }
 
+/* Largeur de la barre */
 .server-list::-webkit-scrollbar {
   width: 15px;
 }
 
+/* Couleur de l’arrière-plan de la barre */
 .server-list::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 1);
 }
 
+/* Curseur de la barre */
 .server-list::-webkit-scrollbar-thumb {
   background: #c9c9c9;
-  border: 2px solid #222;
+  border: 2px solid #222; /* effet Minecraft carré */
 }
 
+/* Effet hover */
 .server-list::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, #6bf5ff, #00aaff);
 }
@@ -121,7 +126,7 @@
     z-index: 1000;
     font-family: "Minecraftia", monospace;
     padding: 15px;
-    background: url("https://i.imgur.com/mfEvGla.png") repeat;
+    background: url("https://static.wikia.nocookie.net/minecraft_gamepedia/images/c/c1/Dirt_background_JE2.png/revision/latest?cb=20210507124914") repeat;
     border-top: 2px solid #222;
     display: flex;
     flex-direction: column;
@@ -168,9 +173,33 @@
       border: none;
       padding: 0px 21px;
     }
+    
+    .mobile-message {
+      display: none;
+    }
+    
+    @media screen and (max-width: 768px) {
+    header,
+    footer,
+    .server-list {
+      display: none;
+    }
+      .mobile-message {
+    align-self: center;
+    display: block;
+    margin-top: 50%;
+    font-size: 18px;
+    line-height: 2;
+    text-shadow: 2px 2px #000;
+    }
+  }
+
+    
+
   </style>
 </head>
 <body>
+  
 
   <header>Compétences</header>
 
@@ -248,7 +277,11 @@
       </div>
     </div>
   </div>
-
+<div class="mobile-message">
+  <p><i class="fa-solid fa-desktop"></i></p>
+  <p>Disponible uniquement sur PC</p>
+  <p>Reviens vite !</p>
+</div>
   <footer>
     <div class="footer-row">
       <button class="btn disabled">Jouer dans ce monde</button>
@@ -261,12 +294,24 @@
       <button class="btn" onclick="location.reload()">Actualiser</button>
       <button class="btn" onclick="window.location.href='index.html'">Retour</button>
     </div>
+    
   </footer>
 
   <script>
+    // Charger le son
+  const clickSound = new Audio("click.wav"); // exemple de son
+
+  // Sélectionner tous les boutons
+  const buttons = document.querySelectorAll("button");
+
+  // Ajouter un événement "click" sur chaque bouton
+  buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      clickSound.currentTime = 0; // remet au début si clic rapide
+      clickSound.play();
+    });
+  });
   </script>
 
 </body>
-
 </html>
-
