@@ -26,21 +26,31 @@
             height: 100vh;
         }
 
-        .video-background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none; /* prevents clicking on video */
-      z-index: -1;
-        }
+.video-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1;
+}
 
-      iframe {
-        width: 100%;
-        height: 100%;
-        border: 0;
-      }
+.video-foreground {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120%; /* un peu plus grand pour éviter les bandes noires */
+  height: 120%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.video-foreground iframe {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
 
         .container {
             position: relative;
@@ -235,12 +245,14 @@
 </head>
 <body>
 <div class="video-background">
-  <iframe
-    src="https://www.youtube.com/embed/jE-m_C0MjBs?autoplay=1&mute=1&loop=1&playlist=jE-m_C0MjBs&controls=0&showinfo=0&modestbranding=1"
-    frameborder="0"
-    allow="autoplay; fullscreen"
-    allowfullscreen>
-  </iframe>
+  <div class="video-foreground">
+    <iframe
+      src="https://www.youtube.com/embed/jE-m_C0MjBs?autoplay=1&mute=1&loop=1&playlist=jE-m_C0MjBs&controls=0&showinfo=0&modestbranding=1&vq=hd1080"
+      frameborder="0"
+      allow="autoplay; fullscreen"
+      allowfullscreen>
+    </iframe>
+  </div>
 </div>
 
     <div class="container">
@@ -295,6 +307,7 @@
 </body>
 
 </html>
+
 
 
 
